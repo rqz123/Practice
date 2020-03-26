@@ -1,0 +1,7 @@
+[numbers]
+x : 1000
+y : 2000
+
+[messages]
+width : 'Width'
+height : 'Height'

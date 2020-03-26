@@ -1,0 +1,131 @@
+/**
+ * DontTouch.java
+ *
+ * Provide a description of the program here.
+ *
+ * @author YOUR NAME HERE
+ * @version 1.0
+ * @since 10/25/2019
+ */
+
+import java.awt.Color;
+import java.awt.Font;
+
+public class DontTouch
+{
+	/**  The array for the Circles to be drawn.                         */
+	private Circle [] circles = new Circle[1000];
+	private double total_area = 0.0;
+	
+	
+	/**  Constructs the size (1000) for the array of Circles.           */
+	public DontTouch ( )
+	{
+		int i = 0;
+		do {
+			circles[i] = new Circle(Math.random());
+			total_area += circles[i++].getArea();
+		} while (i < 1000);
+	}
+	
+	public static void main(String [] args)
+	{
+		long start = System.currentTimeMillis();
+		DontTouch run = new DontTouch();
+		run.setUpCanvas();
+		run.createCircles(1000);
+		//run.drawCircles();
+		run.drawAxes();
+		run.printArea();
+		long end = System.currentTimeMillis();
+		System.out.println("Total Run-time: " + (end - start) / 1000f + " seconds");
+	}
+	
+	/** 
+	 *  Sets up the canvas, using methods from StdDraw.  This includes
+	 *  setting up the canvas size, the horizontal scale (Xscale), and
+	 *  the vertical scale (Yscale).  
+	 */
+	public void setUpCanvas ( )
+	{
+		final int WIDTH = 1200;
+		final int HEIGHT = 800;
+		
+		StdDraw.setCanvasSize(WIDTH, HEIGHT);
+		StdDraw.setXscale(-6, 6);
+		StdDraw.setYscale(-4, 4);
+		StdDraw.clear(new Color(255,255,255));
+		
+		StdDraw.enableDoubleBuffering();
+	}
+	
+	/**
+	 *  Creates the Circles in the array of Circles.  
+	 */
+	public void createCircles(int total)
+	{
+		circles = new Circle [total];
+		
+		for (int i = 0; i < total; i ++)
+		{
+			circles[i] = new Circle();
+			circles[i].setRadius(Math.random());
+		}
+	}
+	
+	/**
+	 * Draws the Circles.
+	 */
+	public void drawCircles ( )
+	{	
+		for (int i = 0; i < circles.length; i ++) 
+		{
+			if (circles[i] != null)
+				circles[i].drawCircle();
+		}
+	}
+	
+	
+	
+	
+	
+	//  You may need to write a helper method or two.
+	
+	
+	
+	
+	
+	
+	/**
+	 *  Draws a pair of axes, over the drawn Circles.  Grid lines are drawn and
+	 *  the scale is shown, to help the viewer see the size of the Circles.
+	 */
+	public void drawAxes ( )
+	{
+		Font font = new Font("Arial", Font.PLAIN, 18);
+		StdDraw.setFont(font);
+		StdDraw.setPenColor(new Color(220,220,220)); 
+		for(double integers = -6; integers <= 6; integers++)
+		{
+			StdDraw.line(integers,-4,integers,4);
+			StdDraw.line(-6,integers,6,integers);
+			StdDraw.setPenColor(new Color(0,0,0)); 	
+			StdDraw.text(integers,-0.4,"" + (int)integers);
+			StdDraw.text(-0.3,integers-0.05,"" + (int)integers);
+		}
+		StdDraw.show();
+	}
+
+	/**
+	 *  Adds the area of each circle to a total area.  Prints this total 
+	 *  area to the terminal window.
+	 */
+	public void printArea ( )
+	{	
+		double area = (double)12.0 * 8.0;
+		area = total_area/area;
+		
+		System.out.println("\n\n\nTotal Area: " + area + "\n\n\n");
+	}
+}
+
