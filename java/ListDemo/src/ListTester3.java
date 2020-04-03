@@ -1,8 +1,8 @@
-public class ListTester
+public class ListTester3
 {
 	public static void main (String [] args)
 	{
-		ListTester run = new ListTester();
+		ListTester3 run = new ListTester3();
 		run.methods();
 	}
 	
@@ -15,16 +15,19 @@ public class ListTester
 		testDelete1(mylist);
 		testInsert(mylist);
 		testDelete2(mylist);
+		testSwap(mylist);
+		testReverse(mylist);
+		testSort(mylist);
 	}
 	
 	public void printNodes ( )
 	{
 		ListNode list;
 		list = new ListNode(13, null);
-		System.out.println("\n\n\nThe node contains: " + list.getValue());
+		System.out.println("\n\n\nThe node contains: " + (Integer)list.getValue());
 
 		list.setValue(17);
-		System.out.println("\nThe node contains: " + list.getValue());
+		System.out.println("\nThe node contains: " + (Integer)list.getValue());
 	}
 	
 	public void testAddFirst(SinglyLinkedList mylist)
@@ -49,8 +52,7 @@ public class ListTester
 		mylist.printList();
 		System.out.println("\n\n");
 	}
-
-
+	
 	public void testDelete1(SinglyLinkedList mylist)
 	{
 		System.out.println(" TESTING THE METHOD delete (at an index):\n");
@@ -80,7 +82,7 @@ public class ListTester
 		mylist.printList();
 		System.out.println("\n\n");
 	}
-
+	
 	public void testInsert(SinglyLinkedList mylist)
 	{
 		System.out.println(" TESTING THE METHOD insert:\n");
@@ -105,10 +107,8 @@ public class ListTester
 		System.out.println("\n\n");
 	}
 	
-	
 	public void testDelete2(SinglyLinkedList mylist)
 	{
-		
 		System.out.println(" TESTING THE METHOD delete (a specific value):\n");
 		System.out.println(" Delete the value 9:");
 		mylist.deleteValue(9);
@@ -122,11 +122,84 @@ public class ListTester
 		System.out.println("\n Delete the value 99:");
 		mylist.deleteValue(99);
 		mylist.printList();
-		
 		System.out.println("\n Delete the value 51:");
 		mylist.deleteValue(51);
 		mylist.printList();
 		System.out.println("\n\n");
 	}
-
+	
+	public void testSwap(SinglyLinkedList mylist)
+	{
+		System.out.println(" TESTING THE METHOD swap (at two given indices):\n");
+		System.out.println(" Swap at indices 2 and 5:");
+		mylist.swap(2,5);
+		mylist.printList();
+		System.out.println("\n Swap at indices 3 and 7:");
+		mylist.swap(3,7);
+		mylist.printList();
+		System.out.println("\n Swap at indices 4 and 4:");
+		mylist.swap(4,4);
+		mylist.printList();
+		System.out.println("\n Swap at indices 0 and 2:");
+		mylist.swap(0,2);
+		mylist.printList();
+		System.out.println("\n Swap at indices 2 and 0:");
+		mylist.swap(2,0);
+		mylist.printList();
+		System.out.println("\n Swap at indices 4 and 5:");
+		mylist.swap(4,5);
+		mylist.printList();
+		System.out.println("\n Swap at indices 2 and 6:");
+		mylist.swap(2,6);
+		mylist.printList();
+		System.out.println("\n Swap at indices 0 and 4:");
+		mylist.swap(0,4);
+		mylist.printList();
+		System.out.println("\n\n");
+	}
+	
+	public void testReverse(SinglyLinkedList mylist)
+	{
+		System.out.println(" TESTING THE METHOD reverse:\n");
+		System.out.println(" Reverse:");
+		mylist.reverse();
+		mylist.printList();
+		System.out.println("\n Reverse:");
+		mylist.reverse();
+		mylist.printList();
+		System.out.println("\n\n");
+	}
+	
+	public void testSort(SinglyLinkedList mylist)
+	{
+		System.out.println(" TESTING THE METHOD sort:\n");
+		System.out.println(" Unsorted List:");
+		mylist.printList();
+		System.out.println("\n Sorted:");
+		mylist.selectionSort();
+		mylist.printList();
+		for(int i = 0; i < 12; i++)
+		{
+			mylist.addLast((int)(1 + Math.random() * 100));
+		}
+		System.out.println("\n Unsorted List:");
+		mylist.printList();
+		System.out.println("\n Sorted:");
+		mylist.selectionSort();
+		mylist.printList();
+		for(int i = 0; i < 20; i++)
+		{
+			mylist.deleteIndex(0);
+		}
+		for(int i = 0; i < 18; i++)
+		{
+			mylist.addLast((int)(1 + Math.random() * 100));
+		}
+		System.out.println("\n Unsorted List:");
+		mylist.printList();
+		System.out.println("\n Sorted:");
+		mylist.selectionSort();
+		mylist.printList();
+		System.out.println("\n\n");
+	}
 }
