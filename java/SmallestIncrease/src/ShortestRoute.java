@@ -26,15 +26,15 @@ public class ShortestRoute
 	 * Finds and returns the size of the linked list.
 	 * @return   size of the linked list. 
 	 */
-	public int size ( )
+	public int size()
 	{
 		ListNode temp = first;
 		int index = 0;
 		
-		while(temp != null)
+		while (temp != null)
 		{
 			temp = temp.getNext();
-			index++;
+			index ++;
 		}
 		
 		return index;
@@ -44,34 +44,32 @@ public class ShortestRoute
 	 * Finds and returns the length of the linked list (Based on points).
 	 * @return   length of the linked list. 
 	 */
-	public double length ( )
+	public double length()
 	{
-		if(size() == 0 || size() == 1)
-			return 0;
-		else
-		{
-			double length = 0;
+		if (first == null || first.getNext() == null)
+			return 0.0;
+		
+		double length = 0.0;
 
-			ListNode node1 = first;
-			ListNode node2 = node1;
-			while(node1 != null && node2 != null) 
+		ListNode node1 = first;
+		ListNode node2 = node1.getNext();
+		
+		do {
+			Point p1 = (Point)node1.getValue();
+			Point p2 = (Point)node2.getValue();
+			length += calcDistance(p1, p2);
+
+			node1 = node2;
+			node2 = node2.getNext();
+
+			if (node2 == null)	// the last node
 			{
-				Point p1 = (Point)node1.getValue();
-				Point p2 = (Point)node2.getValue();
+				p1 = (Point)first.getValue();
 				length += calcDistance(p1, p2);
-
-				node1 = node2;
-				node2 = node2.getNext();
-
-				if(node2 == null)
-				{
-					Point fp = (Point)first.getValue();
-					length += calcDistance(fp, p2);
-				}
 			}
-			
-			return length;
-		}
+		} while (node2 != null);
+		
+		return length;
 	}
 
 	/**
@@ -80,14 +78,14 @@ public class ShortestRoute
 	 * @param p2   The second ListNode
 	 * @return     The distance between the two points. 
 	 */
-	public double calcDistance (Point p1, Point p2)
+	public double calcDistance(Point p1, Point p2)
 	{
 		double x1 = p1.getX(); 
 		double y1 = p1.getY();
 		double x2 = p2.getX();
 		double y2 = p2.getY();
 
-		return Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+		return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 	}
 	
 	/**
@@ -97,33 +95,31 @@ public class ShortestRoute
 	 */
 	public void insertPointAtNearestNeighbor(Point p)
 	{		
-		if(size() == 0)
+		if (first == null)
 			first = new ListNode(p, null);
-		else if(size() == 1)
-			first = new ListNode(p, first);
+		else if (first.getNext() == null)
+			first.setNext(new ListNode(p, null));
 		else
 		{
+			ListNode node = first;
 			ListNode min = null;
-			ListNode node1 = first; 
+			double nearest = Double.MAX_VALUE;
 			
-			Point c = (Point)node1.getValue();
-			double distance = calcDistance(p, c);
-
-			min = node1;
-
-			while(node1.getNext() != null)
-			{
-				node1 = node1.getNext();
-				c = (Point)node1.getValue();
-				if(calcDistance(p, c) < distance)
+			do {
+				Point c = (Point)node.getValue();
+				double dist = calcDistance(p, c);
+				
+				if (dist < nearest)
 				{
-					distance = calcDistance(p, c);
-					min = node1;
+					nearest = dist;
+					min = node;
 				}
-			}
+				
+				node = node.getNext();
+			} while (node != null);
 
-			ListNode temp = min.getNext();
-			min.setNext(new ListNode(p, temp)); 
+			if (min != null)
+				min.setNext(new ListNode(p, min.getNext())); 
 		}
 	}
 
@@ -135,108 +131,88 @@ public class ShortestRoute
 	 */
 	public void insertPointAtSmallestIncrease(Point p)
 	{
-		if(size() == 0)
+		if (first == null)
 			first = new ListNode(p, null);
-		else if(size() == 1)
-			first = new ListNode(p, first);
+		else if (first.getNext() == null)
+			first.setNext(new ListNode(p, null));
 		else
 		{
+			ListNode node = first;
 			ListNode min = null;
-			ListNode node1 = first; 
-			ListNode shortest = null;
-
-			min = node1; //All case
-			shortest = node1; //Best case
-
-			//Set Default Temp Link
-			ListNode temp = min.getNext();
-			min.setNext(new ListNode(p, temp)); 
-
-			//Get length
-			double modelLength = length();
-			double shortestLength = modelLength; 
-
-			while(node1.getNext().getNext() != null)
-			{
-				//Detach link
-				if(min.getNext() == null)
-					min.setNext(null);
-				else
-					min.setNext(min.getNext().getNext());
-
-				//Incrementation 
-				node1 = node1.getNext();
-				min = node1; 
-
-				//Temp link
-				temp = min.getNext();
-				min.setNext(new ListNode(p, temp)); 
-
-				//Comparsion
-				shortestLength = length();
-				if(shortestLength < modelLength)
+			
+			ListNode temp = new ListNode(p, null);
+			double nearest = Double.MAX_VALUE;
+			
+			do {
+				// Insert
+				temp.setNext(node.getNext());
+				node.setNext(temp);
+				
+				// Calculate length
+				double len = length();
+				if (len < nearest) 
 				{
-					modelLength = shortestLength;
-					shortest = min;
+					nearest = len;
+					min = node;
 				}
+				
+				// Detech
+				node.setNext(temp.getNext());
+				temp.setNext(null);
+				
+				node = node.getNext();
+			} while (node != null);
+			
+			if (min != null)
+			{
+				temp.setNext(min.getNext());
+				min.setNext(temp); 
 			}
-
-			//Detach Link
-			if(min.getNext() == null)
-				min.setNext(null);
-			else
-				min.setNext(min.getNext().getNext());
-
-			//Final Link
-			temp = shortest.getNext();
-			shortest.setNext(new ListNode(p, temp)); 
 		}
-
 	}
 	
 	/**
 	 * Draw the model by taking in two points, labeling them red 
 	 * and drawing a blue line. 
 	 */
-	public void draw ( )
+	public void draw()
 	{
-		if (first == null)
+		if (first == null || first.getNext() == null)
 			return;
 
 		ListNode node1 = first;
-		ListNode node2 = node1;
+		ListNode node2 = first.getNext();
 
-		while(node1 != null && node2 != null) 
+		Point p1, p2;;
+		double x1, y1, x2, y2;
+		
+		do
 		{
-			Point p1 = (Point)node1.getValue();
-			double x1 = p1.getX();
-			double y1 = p1.getY();
+			p1 = (Point)node1.getValue();
+			x1 = p1.getX();
+			y1 = p1.getY();
 
-			Point p2 = (Point)node2.getValue();
-			double x2 = p2.getX();
-			double y2 = p2.getY();
+			p2 = (Point)node2.getValue();
+			x2 = p2.getX();
+			y2 = p2.getY();
 
 			StdDraw.setPenColor(new Color(0,0,255));
 			StdDraw.line(x1,y1,x2,y2);
 			StdDraw.setPenColor(new Color(255,0,0));
 			StdDraw.filledCircle(x1,y1,4);
-
+			
 			node1 = node2;
 			node2 = node2.getNext();
+		} while (node2 != null);
 
-			if(node2 == null)
-			{
-				StdDraw.setPenColor(new Color(0,0,255));
-				Point fp = (Point)first.getValue();
-				double x = fp.getX();
-				double y = fp.getY();
-				StdDraw.line(x2,y2,x,y);
-				StdDraw.setPenColor(new Color(255,0,0));
-				StdDraw.filledCircle(x2,y2,4);
-			}
-		}
-			
-
+		StdDraw.setPenColor(new Color(0,0,255));
+		p1 = (Point)first.getValue();
+		x1 = p1.getX();
+		y1 = p1.getY();
+		
+		StdDraw.line(x2,y2,x1,y1);
+		StdDraw.setPenColor(new Color(255,0,0));
+		StdDraw.filledCircle(x2,y2,4);
 	}
 	
 	/**
@@ -248,12 +224,14 @@ public class ShortestRoute
 		int count = 0;
 		ListNode node = first;
 		String result = new String("");
+		
 		while(node != null)
 		{
 			result += String.format("%4d: %s%n",count,(Point)node.getValue());
 			node = node.getNext();
-			count++;
+			count ++;
 		}
+		
 		return result;
     }
 }
