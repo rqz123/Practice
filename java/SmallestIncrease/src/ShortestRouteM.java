@@ -1,25 +1,29 @@
 /**
- * ShortestRoute.java
+ * ShortestRouteM.java
  *
- * The ShortestRoute.java file is an instance of a SinglyLinkedList
+ * The ShortestRouteM.java file is an instance of a SinglyLinkedList
  * to model the Nearest Neighbor Huristic
  *
  * @author Joseph Zhang
  * @version 1.2
- * @since 3/22/2019
+ * @since 4/4/2020
  */
 
 import java.awt.Color;
 
-public class ShortestRoute
+public class ShortestRouteM
 {
 	//Head Node
 	private ListNode first;
 
+	//Total length of the linkded list
+	private double total_len;
+	
 	//Constructs the head node 
-	public ShortestRoute()
+	public ShortestRouteM()
 	{
 		first = null;
+		total_len = 0.0;
 	}
 	
 	/**
@@ -46,18 +50,18 @@ public class ShortestRoute
 	 */
 	public double length()
 	{
-		if (first == null || first.getNext() == null)
-			return 0.0;
+		total_len = 0.0;
 		
-		double length = 0.0;
-
+		if (first == null || first.getNext() == null)
+			return total_len;
+		
 		ListNode node1 = first;
 		ListNode node2 = node1.getNext();
 		
 		do {
 			Point p1 = (Point)node1.getValue();
 			Point p2 = (Point)node2.getValue();
-			length += calcDistance(p1, p2);
+			total_len += calcDistance(p1, p2);
 
 			node1 = node2;
 			node2 = node2.getNext();
@@ -65,11 +69,26 @@ public class ShortestRoute
 			if (node2 == null)	// the last node
 			{
 				p1 = (Point)first.getValue();
-				length += calcDistance(p1, p2);
+				total_len += calcDistance(p1, p2);
 			}
 		} while (node2 != null);
 		
-		return length;
+		return total_len;
+	}
+
+	/**
+	 * Finds and returns the length of the linked list (Based on points).
+	 * @return   length of the linked list. 
+	 */
+	public double length(ListNode node1, ListNode node2)
+	{
+		if (node1 == null || node2 == null)
+			return 0.0;
+		
+		Point p1 = (Point)node1.getValue();
+		Point p2 = (Point)node2.getValue();
+		
+		return calcDistance(p1, p2);
 	}
 
 	/**
@@ -96,9 +115,15 @@ public class ShortestRoute
 	public void insertPointAtNearestNeighbor(Point p)
 	{		
 		if (first == null)
+		{
 			first = new ListNode(p, null);
+			total_len = 0;
+		}
 		else if (first.getNext() == null)
+		{
 			first.setNext(new ListNode(p, null));
+			total_len = length();
+		}
 		else
 		{
 			ListNode node = first;
@@ -132,9 +157,15 @@ public class ShortestRoute
 	public void insertPointAtSmallestIncrease(Point p)
 	{
 		if (first == null)
+		{
 			first = new ListNode(p, null);
+			total_len = 0.0;
+		}
 		else if (first.getNext() == null)
+		{
 			first.setNext(new ListNode(p, null));
+			total_len = length();
+		}
 		else
 		{
 			ListNode node = first;
@@ -144,29 +175,51 @@ public class ShortestRoute
 			double nearest = Double.MAX_VALUE;
 			
 			do {
-				// Insert
-				temp.setNext(node.getNext());
-				node.setNext(temp);
+				double len = total_len;
+				ListNode next = node.getNext();
 				
-				// Calculate length
-				double len = length();
+				if (next != null)
+				{
+					// The distance between current node and next node
+					double len_n2nn = length(node, next);
+					
+					// The distance between current node and the new node
+					double len_n2t = length(node, temp);
+					
+					// The distance between the next node and the new node
+					double len_nn2t = length(next, temp);
+					
+					len = len - len_n2nn + len_n2t + len_nn2t;
+				}
+				else
+				{
+					// The distance between the last node and the first node
+					double len_ln2fn = length(node, first);
+					
+					// The distance between current node and the new node
+					double len_n2t = length(node, temp);
+					
+					// The distance between the new node and the first node
+					double len_fn2t = length(temp, first);
+					
+					len = len - len_ln2fn + len_n2t + len_fn2t;
+				}
+				
 				if (len < nearest) 
 				{
 					nearest = len;
 					min = node;
 				}
 				
-				// Detech
-				node.setNext(temp.getNext());
-				temp.setNext(null);
-				
-				node = node.getNext();
+				node = next;
 			} while (node != null);
 			
 			if (min != null)
 			{
 				temp.setNext(min.getNext());
-				min.setNext(temp); 
+				min.setNext(temp);
+				
+				total_len = nearest;	// update the total length
 			}
 		}
 	}

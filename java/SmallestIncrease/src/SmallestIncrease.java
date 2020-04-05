@@ -6,18 +6,18 @@ public class SmallestIncrease
 {
 	private int HEIGHT, WIDTH, BORDER;
 	private String file;
-	private ShortestRoute route;
+	private ShortestRouteM route;
 	
 	public SmallestIncrease(String fileName)
 	{
 		file = new String(fileName);
-		route = new ShortestRoute();
+		route = new ShortestRouteM();
 	}
 	
 	public static void main(String[] args) 
 	{
 		// get dimensions, set up canvas and drawing
-		String f = new String("p1000.txt");
+		String f = new String("p100.txt");
 		if(args.length > 0)
 		{
 			f = args[0];
