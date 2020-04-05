@@ -17,7 +17,7 @@ public class SmallestIncrease
 	public static void main(String[] args) 
 	{
 		// get dimensions, set up canvas and drawing
-		String f = new String("p100.txt");
+		String f = new String("p1000.txt");
 		if(args.length > 0)
 		{
 			f = args[0];

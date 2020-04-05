@@ -16,14 +16,10 @@ public class ShortestRouteM
 	//Head Node
 	private ListNode first;
 
-	//Total length of the linkded list
-	private double total_len;
-	
 	//Constructs the head node 
 	public ShortestRouteM()
 	{
 		first = null;
-		total_len = 0.0;
 	}
 	
 	/**
@@ -50,18 +46,18 @@ public class ShortestRouteM
 	 */
 	public double length()
 	{
-		total_len = 0.0;
-		
 		if (first == null || first.getNext() == null)
-			return total_len;
+			return 0.0;
 		
+		double length = 0.0;
+
 		ListNode node1 = first;
 		ListNode node2 = node1.getNext();
 		
 		do {
 			Point p1 = (Point)node1.getValue();
 			Point p2 = (Point)node2.getValue();
-			total_len += calcDistance(p1, p2);
+			length += p1.getDist(p2);
 
 			node1 = node2;
 			node2 = node2.getNext();
@@ -69,70 +65,40 @@ public class ShortestRouteM
 			if (node2 == null)	// the last node
 			{
 				p1 = (Point)first.getValue();
-				total_len += calcDistance(p1, p2);
+				length += p1.getDist(p2);
 			}
 		} while (node2 != null);
 		
-		return total_len;
+		return length;
 	}
 
-	/**
-	 * Finds and returns the length of the linked list (Based on points).
-	 * @return   length of the linked list. 
-	 */
-	public double length(ListNode node1, ListNode node2)
-	{
-		if (node1 == null || node2 == null)
-			return 0.0;
-		
-		Point p1 = (Point)node1.getValue();
-		Point p2 = (Point)node2.getValue();
-		
-		return calcDistance(p1, p2);
-	}
-
-	/**
-	 * Calculates the distance between two Nodes by getting the value. 
-	 * @param p1   The first ListNode
-	 * @param p2   The second ListNode
-	 * @return     The distance between the two points. 
-	 */
-	public double calcDistance(Point p1, Point p2)
-	{
-		double x1 = p1.getX(); 
-		double y1 = p1.getY();
-		double x2 = p2.getX();
-		double y2 = p2.getY();
-
-		return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-	}
-	
 	/**
 	 * Calculates and relink the point to its nearest neighbor point. 
 	 * Not the shortest Path!
 	 * @param p   Point that's going to be linked
 	 */
 	public void insertPointAtNearestNeighbor(Point p)
-	{		
+	{
 		if (first == null)
 		{
 			first = new ListNode(p, null);
-			total_len = 0;
 		}
+		/*
 		else if (first.getNext() == null)
 		{
 			first.setNext(new ListNode(p, null));
-			total_len = length();
 		}
+		*/
 		else
 		{
 			ListNode node = first;
-			ListNode min = null;
+			ListNode min = first;
+			
+			double dist = 0.0;
 			double nearest = Double.MAX_VALUE;
 			
 			do {
-				Point c = (Point)node.getValue();
-				double dist = calcDistance(p, c);
+				dist = p.getDist((Point)node.getValue());
 				
 				if (dist < nearest)
 				{
@@ -143,8 +109,7 @@ public class ShortestRouteM
 				node = node.getNext();
 			} while (node != null);
 
-			if (min != null)
-				min.setNext(new ListNode(p, min.getNext())); 
+			min.setNext(new ListNode(p, min.getNext())); 
 		}
 	}
 
@@ -157,53 +122,38 @@ public class ShortestRouteM
 	public void insertPointAtSmallestIncrease(Point p)
 	{
 		if (first == null)
-		{
 			first = new ListNode(p, null);
-			total_len = 0.0;
-		}
-		else if (first.getNext() == null)
-		{
-			first.setNext(new ListNode(p, null));
-			total_len = length();
-		}
 		else
 		{
 			ListNode node = first;
+			ListNode next = null;
 			ListNode min = null;
 			
 			ListNode temp = new ListNode(p, null);
 			double nearest = Double.MAX_VALUE;
 			
+			double len, len1, len2;
+			Point p1, p2;
+			
 			do {
-				double len = total_len;
-				ListNode next = node.getNext();
+				next = node.getNext();
+				p1 = (Point)node.getValue();
 				
 				if (next != null)
-				{
-					// The distance between current node and next node
-					double len_n2nn = length(node, next);
-					
-					// The distance between current node and the new node
-					double len_n2t = length(node, temp);
-					
-					// The distance between the next node and the new node
-					double len_nn2t = length(next, temp);
-					
-					len = len - len_n2nn + len_n2t + len_nn2t;
-				}
+					p2 = (Point)next.getValue();
 				else
-				{
-					// The distance between the last node and the first node
-					double len_ln2fn = length(node, first);
+					p2 = (Point)first.getValue();
 					
-					// The distance between current node and the new node
-					double len_n2t = length(node, temp);
-					
-					// The distance between the new node and the first node
-					double len_fn2t = length(temp, first);
-					
-					len = len - len_ln2fn + len_n2t + len_fn2t;
-				}
+				// The distance between current node and next node
+				len = p1.getDist(p2);
+				
+				// The distance between current node and the new node
+				len1 = p1.getDist(p);
+				
+				// The distance between the next node and the new node
+				len2 = p2.getDist(p);
+				
+				len = len1 + len2 - len;
 				
 				if (len < nearest) 
 				{
@@ -211,15 +161,13 @@ public class ShortestRouteM
 					min = node;
 				}
 				
-				node = next;
+				node = node.getNext();
 			} while (node != null);
 			
 			if (min != null)
 			{
 				temp.setNext(min.getNext());
 				min.setNext(temp);
-				
-				total_len = nearest;	// update the total length
 			}
 		}
 	}
