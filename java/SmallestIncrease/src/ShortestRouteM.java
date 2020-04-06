@@ -71,9 +71,9 @@ public class ShortestRouteM
 		
 		return length;
 	}
-
+	
 	/**
-	 * Calculates and relink the point to its nearest neighbor point. 
+	 * Calculates the point to its nearest neighbor point. 
 	 * Not the shortest Path!
 	 * @param p   Point that's going to be linked
 	 */
@@ -99,7 +99,6 @@ public class ShortestRouteM
 			
 			do {
 				dist = p.getDist((Point)node.getValue());
-				
 				if (dist < nearest)
 				{
 					nearest = dist;
@@ -116,7 +115,6 @@ public class ShortestRouteM
 	/**
 	 * Tries all the possible combinations of linkedLists to
 	 * determine which one is the shortest. 
-	 * Still not the best possible algorithm! 
 	 * @param p   Point that's going to be linked
 	 */
 	public void insertPointAtSmallestIncrease(Point p)
@@ -129,18 +127,15 @@ public class ShortestRouteM
 			ListNode next = null;
 			ListNode min = null;
 			
-			ListNode temp = new ListNode(p, null);
 			double nearest = Double.MAX_VALUE;
-			
 			double len, len1, len2;
-			Point p1, p2;
 			
 			do {
-				next = node.getNext();
-				p1 = (Point)node.getValue();
+				Point p1 = (Point)node.getValue();
+				Point p2;
 				
-				if (next != null)
-					p2 = (Point)next.getValue();
+				if (node.getNext() != null)
+					p2 = (Point)(node.getNext().getValue());
 				else
 					p2 = (Point)first.getValue();
 					
@@ -165,10 +160,106 @@ public class ShortestRouteM
 			} while (node != null);
 			
 			if (min != null)
+				min.setNext(new ListNode(p, min.getNext()));
+		}
+	}
+	
+	/**
+	 * A new method for Smallest Increase in Path
+	 * @param p	Point that's going to be linked
+	 */
+	public void insertPointAtSmallestIncrease2(Point p)
+	{
+		if (first == null)
+		{
+			first = new ListNode(p, null);
+		}
+		else
+		{
+			ListNode min = null;
+			double nearest = Double.MAX_VALUE;
+			
+			ListNode node = first.getNext();
+			ListNode prev = first;
+			
+			for (; node != null; node = node.getNext(), prev = prev.getNext())
 			{
-				temp.setNext(min.getNext());
-				min.setNext(temp);
+				double len1 = ((Point)(prev.getValue())).getDist((Point)(node.getValue()));
+				double len2 = ((Point)(prev.getValue())).getDist(p) + ((Point)(node.getValue())).getDist(p);
+				
+				if (len2 - len1 < nearest)
+				{
+					nearest = len2 - len1;
+					min = prev;
+				}
 			}
+			
+			double len1 = ((Point)(first.getValue())).getDist((Point)(prev.getValue()));
+			double len2 = ((Point)(prev.getValue())).getDist(p) + ((Point)(first.getValue())).getDist(p);
+			
+			if (len2 - len1 < nearest)
+				min = prev;
+			
+			min.setNext(new ListNode(p, min.getNext()));
+		}
+	}
+	
+	/**
+	 * Another new method for Smallest Increase in Path
+	 * @param p	Point that's going to be linked
+	 */
+	public void insertPointAtSmallestIncrease3(Point p)
+	{
+		if (first == null)
+		{
+			first = new ListNode(p, null);
+		}
+		else
+		{
+			ListNode node = first;
+			ListNode min = first;
+			
+			double dist = 0.0;
+			double nearest1 = Double.MAX_VALUE;
+			double nearest2 = Double.MAX_VALUE;
+			
+			do {
+				dist = p.getDist((Point)node.getValue());
+				if (dist < nearest1)
+				{
+					nearest1 = dist;
+
+					ListNode next = node.getNext();
+					Point p1 = (Point)node.getValue();
+					Point p2;
+					
+					if (node.getNext() != null)
+						p2 = (Point)node.getNext().getValue();
+					else
+						p2 = (Point)first.getValue();
+						
+					// The distance between current node and next node
+					double len = p1.getDist(p2);
+					
+					// The distance between current node and the new node
+					double len1 = p1.getDist(p);
+					
+					// The distance between the next node and the new node
+					double len2 = p2.getDist(p);
+					
+					len = len1 + len2 - len;
+					
+					if (len < nearest2) 
+					{
+						nearest2 = len;
+						min = node;
+					}
+				}
+				
+				node = node.getNext();
+			} while (node != null);
+
+			min.setNext(new ListNode(p, min.getNext())); 
 		}
 	}
 	

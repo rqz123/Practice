@@ -17,7 +17,7 @@ public class SmallestIncrease
 	public static void main(String[] args) 
 	{
 		// get dimensions, set up canvas and drawing
-		String f = new String("p1000.txt");
+		String f = new String("p100.txt");
 		if(args.length > 0)
 		{
 			f = args[0];
@@ -50,7 +50,9 @@ public class SmallestIncrease
 //			System.out.println(x + "   " + y);
 			Point p = new Point(x, y);
 			//route.insertPointAtNearestNeighbor(p);
-			route.insertPointAtSmallestIncrease(p);
+			//route.insertPointAtSmallestIncrease(p);
+			//route.insertPointAtSmallestIncrease2(p);
+			route.insertPointAtSmallestIncrease3(p);
 			/*
 			StdDraw.clear();
 			route.draw();

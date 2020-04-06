@@ -62,7 +62,7 @@ public class ShortestRouteTimer
 			double y = lo + Math.random()*(hi - lo);
             Point p = new Point(x, y);
             //System.out.println(i);
-			route2.insertPointAtSmallestIncrease(p);
+			route2.insertPointAtSmallestIncrease3(p);
 		}
 		double length2 = route2.length();
 		double elapsed2 = timer2.elapsedTime();
