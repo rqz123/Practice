@@ -51,8 +51,8 @@ public class SmallestIncrease
 			Point p = new Point(x, y);
 			//route.insertPointAtNearestNeighbor(p);
 			//route.insertPointAtSmallestIncrease(p);
-			//route.insertPointAtSmallestIncrease2(p);
-			route.insertPointAtSmallestIncrease3(p);
+			route.insertPointAtSmallestIncrease2(p);
+			//route.insertPointAtSmallestIncrease3(p);
 			/*
 			StdDraw.clear();
 			route.draw();
