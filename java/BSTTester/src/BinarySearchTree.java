@@ -49,7 +49,7 @@ public class BinarySearchTree
 	
 	/**
 	 * Check if a node including child node contains the value. 
-	 * @param node: a specified node in the BST. 
+	 * @param node: a specified node tree in the BST. 
 	 * @param value: the object to be checked. 
 	 * @return true if this BST contains specified value, otherwise returns false.
 	 */
@@ -72,8 +72,8 @@ public class BinarySearchTree
 	}
 	
 	/**
-	 * Add the value to the specified node. 
-	 * @param node: a specified node in the BST. 
+	 * Add the value to the specified node tree. 
+	 * @param node: a specified node tree in the BST. 
 	 * @param value: the object to be added. 
 	 * @return the newly added node.
 	 */
@@ -111,8 +111,8 @@ public class BinarySearchTree
 	}
 	
 	/**
-	 * Find the number of node starting from the specified node. 
-	 * @param node: the specified node. 
+	 * Find the number of node starting from the specified node tree. 
+	 * @param node: the specified node tree. 
 	 * @return the total number of the nodes. 
 	 */
 	public int countNodes(TreeNode node)
@@ -134,7 +134,7 @@ public class BinarySearchTree
 	
 	/**
 	 * Return the maximum depth of tree.
-	 * @param node: starting from the specified node. 
+	 * @param node: starting from the specified node tree. 
 	 * @return the maximum depth of the tree. 
 	 */
 	private int maxDepth(TreeNode node) 
