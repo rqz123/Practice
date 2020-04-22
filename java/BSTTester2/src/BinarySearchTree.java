@@ -284,7 +284,7 @@ public class BinarySearchTree
 	 * Delete the value from the specified node tree. 
 	 * @param node: the specified note tree.
 	 * @param value: the value. 
-	 * @return
+	 * @return the new node.
 	 */
 	private TreeNode delete(TreeNode node, Object value) 
 	{
