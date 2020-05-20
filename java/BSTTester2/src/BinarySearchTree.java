@@ -27,7 +27,25 @@ public class BinarySearchTree
 	{
 		root = null;
 	}
-	
+
+	/**
+	 * Get the root of BST
+	 * @return the root of BST. 
+	 */
+	public TreeNode getRoot()
+	{
+		return root;
+	}
+
+	/**
+	 * Set the root of BST
+	 * @param node is the root of BST to be set.
+	 */
+	public void setRoot(TreeNode node)
+	{
+		root = node;
+	}
+
 	/**
 	 * Clear and set an empty BST.
 	 */
